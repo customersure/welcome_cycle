@@ -3,9 +3,11 @@ require "welcome_cycle/driver"
 require "welcome_cycle/email"
 
 module WelcomeCycle
-
+  
+  @@emails = []
+  
   def register(email_attributes)
-    #TODO: FInd out best way to store the email << WelcomeCycle::Email.new(email_attributes)
+    @@emails << WelcomeCycle::Email.new(email_attributes)
   end
 
   def self.base_class=(value)

@@ -1,7 +1,13 @@
 module WelcomeCycle
   class Email
 
-    def initialize
+    attr_accessor :name, :conditions, :days_after_signup, :days_before_trial_end
+
+    def initialize(name, conditions, days_after_signup, days_before_trial_end)
+      @name = name
+      @conditions = conditions
+      @days_after_signup = days_after_signup
+      @days_before_trial_end = days_before_trial_end
     end
 
     def deliver(base_class)
