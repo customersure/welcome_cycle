@@ -2,10 +2,8 @@ module WelcomeCycle
 
   class Driver
 
-    def initialize
-    end
-
-    def run
+    def self.run
+      WelcomeCycle::EmailRegister.instance.emails
     end
 
   end

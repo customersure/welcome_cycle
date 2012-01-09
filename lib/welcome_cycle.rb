@@ -1,17 +1,21 @@
 require "welcome_cycle/version"
 require "welcome_cycle/driver"
 require "welcome_cycle/email"
+require "welcome_cycle/email_register"
 
 module WelcomeCycle
-  
-  @@emails = []
-  
-  def register(email_attributes)
-    @@emails << WelcomeCycle::Email.new(email_attributes)
+
+  class << self
+    attr_accessor :config
   end
 
-  def self.base_class=(value)
-    WelcomeCycle.config.base_class = value
+  # WelcomeCycle.configure do |c|
+  #   c.base_class = User
+  # end
+
+  def self.configure
+    self.config ||= Config.new
+    yield(config)
   end
 
 end
