@@ -1,0 +1,4 @@
+# welcome_cycle
+
+`welcome_cycle` is a gem to send out a cycle of emails when a
+customer signs up for a SaaS product.
