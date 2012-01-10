@@ -1,5 +1,3 @@
 class WelcomeCycleMailer < ActionMailer::Base
-
-# your templates here
-
+# your actions here
 end

@@ -8,6 +8,10 @@ module WelcomeCycle
         copy_file 'welcome_cycle_mailer.rb', 'app/mailers/welcome_cycle_mailer.rb'
       end
 
+      def copy_email_list
+        copy_file 'welcome_cycle.rb', 'lib/welcome_cycle.rb'
+      end
+
     end
   end
 end
