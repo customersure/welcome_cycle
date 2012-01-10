@@ -10,7 +10,7 @@ module WelcomeCycle
 
 
 WelcomeCycle::Email.new("#{file_name.gsub(/_/, ' ').capitalize}") do
-  days 1 # on which days of the trial should the mail be sent?
+  days 1, 10, -2 # on which days of the trial should the mail be sent?
   scope do
     # send if these Arel conditions are met
   end
