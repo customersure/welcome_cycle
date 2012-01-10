@@ -2,6 +2,7 @@ require "welcome_cycle/version"
 require "welcome_cycle/driver"
 require "welcome_cycle/email"
 require "welcome_cycle/email_register"
+require "welcome_cycle/config"
 
 module WelcomeCycle
 
@@ -9,12 +10,8 @@ module WelcomeCycle
     attr_accessor :config
   end
 
-  # WelcomeCycle.configure do |c|
-  #   c.base_class = User
-  # end
-
   def self.configure
-    self.config ||= Config.new
+    self.config ||= WelcomeCycle::Config.new
     yield(config)
   end
 

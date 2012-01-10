@@ -1,15 +1,12 @@
 module WelcomeCycle
 
   class Config
-    include Singleton
-
-    attr_accessor :base_class, :trial_start_date, :trial_ends_date, :recipients_method
+    attr_accessor :base_class, :welcome_cycle_start_date, :welcome_cycle_end_date
 
     def initialize
       @base_class = Organisation if defined?(Organisation)
-      @trial_start_date = :created_at
-      @trial_ends_date = :trial_ends_date
-      @recipient_email_method = :welcome_cycle_recipients
+      @welcome_cycle_start_date = :created_at
+      @welcome_cycle_end_date = :trial_ends_at
     end
   end
 
