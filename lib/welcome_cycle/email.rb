@@ -60,7 +60,7 @@ module WelcomeCycle
         @days.each_with_index do |day_in_cycle, i|
           field = day_in_cycle > 0 ? WelcomeCycle.config.welcome_cycle_start_date : WelcomeCycle.config.welcome_cycle_end_date
           conditions[0] << " OR " unless i.zero?
-          conditions[0] << "date(#{field}) = ?"
+          conditions[0] << "date(#{WelcomeCycle.config.base_class.table_name}.#{field}) = ?"
           conditions << Date.today - day_in_cycle # Positive: 6th-5.days = 1st / Negative: 25th--5.days = 30th
         end
         conditions
