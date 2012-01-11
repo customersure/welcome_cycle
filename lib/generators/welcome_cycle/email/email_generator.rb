@@ -24,9 +24,9 @@ end
         inject_into_class 'app/mailers/welcome_cycle_mailer.rb', WelcomeCycleMailer do
           <<-EOS
 
-    def #{file_name}(recipient)
-      mail(:to => recipient.email, :subject => 'Your subject here')
-    end
+  def #{file_name}(recipient)
+    mail(:to => recipient.email, :subject => 'Your subject here')
+  end
 EOS
         end
       end
