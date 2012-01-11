@@ -17,6 +17,7 @@ module WelcomeCycle
       @scope_chain = nil
       @name = name
       instance_eval &block
+      WelcomeCycle::EmailRegister.instance << self
     end
 
     def days(*days)
