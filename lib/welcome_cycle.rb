@@ -1,3 +1,5 @@
+require 'singleton'
+
 require "welcome_cycle/version"
 require "welcome_cycle/driver"
 require "welcome_cycle/email"
