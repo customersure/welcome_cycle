@@ -23,6 +23,7 @@ module WelcomeCycle
     def days(*days)
       raise ArgumentError, "You cannot specify day zero in the welcome cycle" if days.detect { |d| d.zero? }
       raise ArgumentError, "You must specify at least one day in the welcome cycle that you'd like this email to be sent on" if days.empty?
+      # TODO: check the welcome_cycle_start_date and/or welcome_cycle_end_date are set
       @days = days
     end
 
