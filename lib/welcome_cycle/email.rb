@@ -14,14 +14,15 @@ module WelcomeCycle
   class Email
 
     def initialize(name, &block)
-      @scope_chain = Proc.new
+      @scope_chain = nil
       @name = name
       instance_eval &block
     end
 
     def days(*days)
-      @days = days
       raise ArgumentError, "You cannot specify day zero in the welcome cycle" if days.detect { |d| d.zero? }
+      raise ArgumentError, "You must specify at least one day in the welcome cycle that you'd like this email to be sent on" if days.empty?
+      @days = days
     end
 
     def scope(&block)
@@ -29,28 +30,28 @@ module WelcomeCycle
     end
 
     def send_to_recipients!
-      recipients.each { |r| e.deliver(r) }
+      recipients.each { |r| deliver(r) }
+    end
+
+    def recipients
+      return [] if @days.nil? # Don't like this but cannot workout how to detect whether the block given to initialize contains days.
+      recipients = WelcomeCycle.config.base_class
+      recipients = recipients.where(date_conditions)
+      if @scope_chain.nil?
+        recipients.all
+      else
+        recipients.instance_eval(&@scope_chain)
+      end
+    end
+
+    def deliver(r)
+      WelcomeCycleMailer.send(template_name, r).deliver
     end
 
     private
 
-      def recipients
-        recipients = WelcomeCycle.config.base_class
-        recipients = recipients.where(date_conditions) if @days.present?
-        if @scope_chain.blank?
-          recipients.all
-        else
-          recipients.instance_eval(&@scope_chain)
-        end
-      end
-
-      def deliver(r)
-        puts "delivering email '#{template_name}' to #{r}"
-        # WelcomeCycleMailer.send(template_name, r).deliver
-      end
-
       def template_name
-        @name.downcase.gsub(/%s/, '_')
+        @name.downcase.gsub(/\s/, '_')
       end
 
       def date_conditions
@@ -59,7 +60,7 @@ module WelcomeCycle
           field = day_in_cycle > 0 ? WelcomeCycle.config.welcome_cycle_start_date : WelcomeCycle.config.welcome_cycle_end_date
           conditions[0] << " OR " unless i.zero?
           conditions[0] << "date(#{field}) = ?"
-          conditions << Date.today - day_in_cycle.days # Positive: 6th-5.days = 1st / Negative: 25th--5.days = 30th
+          conditions << Date.today - day_in_cycle # Positive: 6th-5.days = 1st / Negative: 25th--5.days = 30th
         end
         conditions
       end
