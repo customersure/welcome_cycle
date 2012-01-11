@@ -46,7 +46,11 @@ module WelcomeCycle
     end
 
     def deliver(r)
-      WelcomeCycleMailer.send(template_name, r).deliver
+      if mail_message_obj = WelcomeCycleMailer.send(template_name, r)
+        mail_message_obj.deliver
+      else
+        raise "Failed to create Mail::Message object from the current template #{template_name}. Check it is specified in your WelcomeCycleMailer?"
+      end
     end
 
     private
