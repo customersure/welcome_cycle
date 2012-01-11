@@ -1,8 +1,8 @@
 # List your welcome cycle mails here as follows:
 
-# WelcomeCycle::Email.new("Tab code for website") do
-#   days 1, 5, 15, -5  # negative days are counted backwards from the trial end
+# WelcomeCycle::Email.new("We miss you") do
+#   days 7, 14, 21
 #   scope do
-#     where('created_at < ?', Date.today) # send if these Arel conditions are met
+#     where('last_login = ?', nil)
 #   end
 # end

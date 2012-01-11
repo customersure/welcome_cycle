@@ -5,7 +5,7 @@ module WelcomeCycle
       source_root File.expand_path(File.join(File.dirname(__FILE__), 'templates'))
 
       def register_new_mail
-        append_to_file 'lib/welcome_cycle.rb' do
+        append_to_file 'config/initializers/welcome_cycle.rb' do
           <<-EOS
 
 
@@ -24,7 +24,8 @@ end
         inject_into_class 'app/mailers/welcome_cycle_mailer.rb', WelcomeCycleMailer do
           <<-EOS
 
-    def #{file_name}
+    def #{file_name}(recipient)
+      mail(:to => recipient.email, :subject => 'Your subject here')
     end
 EOS
         end

@@ -6,6 +6,9 @@ customer signs up for a SaaS product.
 ## Install
 	rails generate welcome_cycle:install
 
+Creates:
+config/initializers/welcome_cycle.rb
+app/mailers/welcome_cycle_mailer.rb
 
 ## Config
 
