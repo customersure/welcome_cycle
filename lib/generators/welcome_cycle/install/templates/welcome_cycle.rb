@@ -1,8 +1,7 @@
-# List your welcome cycle mails here as follows:
+WelcomeCycle.configure do |c|
+  c.base_class = Subscription
+  c.welcome_cycle_start_date = :trial_started_at
+  c.welcome_cycle_end_date = :trial_ends_at
+end
 
-# WelcomeCycle::Email.new("We miss you") do
-#   days 7, 14, 21
-#   scope do
-#     where('last_login = ?', nil)
-#   end
-# end
+# run 'rails generate welcome_cycle:email name_for_your_email_here' to add new welcome cycle emails
