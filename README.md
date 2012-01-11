@@ -8,6 +8,8 @@ customer signs up for a SaaS product.
 
 # Defining new emails
 
+Warning: You must specify days for each email, even if it's only one day.
+If you leave days blank or miss it out the email will never be sent.
 
 # Config options
 1) base_class – The model in your app to query for email recipients (E.g Organisation, Subscription, User, Account)
