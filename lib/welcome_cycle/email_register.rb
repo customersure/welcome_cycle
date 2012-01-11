@@ -14,7 +14,7 @@ module WelcomeCycle
     end
 
     def each
-      @emails.each { | email| yield(email) }
+      @emails.each { |email| yield(email) }
     end
 
   end
