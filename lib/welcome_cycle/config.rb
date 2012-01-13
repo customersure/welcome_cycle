@@ -4,7 +4,6 @@ module WelcomeCycle
     attr_accessor :base_class, :welcome_cycle_start_date, :welcome_cycle_end_date
 
     def initialize
-      @base_class = Subscription if defined?(Subscription)
       @welcome_cycle_start_date = :trial_stared_at
       @welcome_cycle_end_date = :trial_ends_at
     end
