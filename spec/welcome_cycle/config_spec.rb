@@ -2,15 +2,13 @@ require 'spec_helper'
 
 describe WelcomeCycle::Config do
 
-  class Organisation
-  end
-
   subject { WelcomeCycle::Config.new }
 
-  it 'has sensible defaults' do
-    subject.base_class.should eq(Organisation)
-    subject.welcome_cycle_start_date.should eq(:created_at)
-    subject.welcome_cycle_end_date.should eq(:trial_ends_at)
+  describe "new config object" do
+    it 'has sensible defaults for the welcome cycle start and end dates' do
+      subject.welcome_cycle_start_date.should eq(:trial_stared_at)
+      subject.welcome_cycle_end_date.should eq(:trial_ends_at)
+    end
   end
 
   describe "attributes" do
