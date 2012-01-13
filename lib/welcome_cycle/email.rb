@@ -1,33 +1,23 @@
-# Positive days is after signup
-# Negative days is from the trial end
-
-
-# WelcomeCycle::Email.new("Tab code for website") do
-#   days 1, 5, 15, -5
-#   scope do
-#     where('created_at < ?', Date.today)
-#   end
-# end
-
 module WelcomeCycle
 
   class Email
 
     def initialize(name, &block)
-      @scope_chain = nil
       @name = name
       instance_eval &block
+      raise "You must specify at least one day to send this email by specifying 'days_into_cycle' and/or 'days_offset_from_cycle_end'" if @days_into_cycle.nil? && @days_offset_from_cycle_end.nil?
       WelcomeCycle::EmailRegister.instance << self
     end
 
-    # Change to:
-    # days_into_cycle 1, 5, 6           # must be > 0
-    # days_offset_from_cycle_end 5, 0, -5
-    def days(*days)
-      raise ArgumentError, "You cannot specify day zero in the welcome cycle" if days.detect { |d| d.zero? }
-      raise ArgumentError, "You must specify at least one day in the welcome cycle that you'd like this email to be sent on" if days.empty?
-      # TODO: check the welcome_cycle_start_date and/or welcome_cycle_end_date are set
-      @days = days
+    def days_into_cycle(*days)
+      raise ArgumentError, "'days_into_cycle' can only contain positive numbers" if days.detect { |d| d <= 0 }
+      raise "When specifying 'days_into_cycle' you must set the 'welcome_cycle_start_date'. See README config section" if WelcomeCycle.config.welcome_cycle_start_date.nil?
+      @days_into_cycle = days
+    end
+
+    def days_offset_from_cycle_end(*days)
+      raise "When specifying 'days_offset_from_cycle_end' you must set the 'welcome_cycle_end_date' config section" if WelcomeCycle.config.welcome_cycle_end_date.nil?
+      @days_offset_from_cycle_end = days
     end
 
     def scope(&block)
@@ -39,21 +29,16 @@ module WelcomeCycle
     end
 
     def recipients
-      return [] if @days.nil? # Don't like this but cannot workout how to detect whether the block given to initialize contains days.
       recipients = WelcomeCycle.config.base_class
       recipients = recipients.where(date_conditions)
-      if @scope_chain.nil?
-        recipients.all
-      else
-        recipients.instance_eval(&@scope_chain)
-      end
+      @scope_chain.nil? ? recipients.all : recipients.instance_eval(&@scope_chain)
     end
 
     def deliver(r)
       if mail_message_obj = WelcomeCycleMailer.send(template_name, r)
         mail_message_obj.deliver
       else
-        raise "Failed to create Mail::Message object from the current template #{template_name}. Check it is specified in your WelcomeCycleMailer?"
+        raise "Failed to create Mail::Message object from the current template name '#{template_name}'. Check it is specified in your WelcomeCycleMailer."
       end
     end
 
@@ -65,11 +50,13 @@ module WelcomeCycle
 
       def date_conditions
         conditions = ['']
-        @days.each_with_index do |day_in_cycle, i|
-          field = day_in_cycle > 0 ? WelcomeCycle.config.welcome_cycle_start_date : WelcomeCycle.config.welcome_cycle_end_date
-          conditions[0] << " OR " unless i.zero?
-          conditions[0] << "date(#{WelcomeCycle.config.base_class.table_name}.#{field}) = ?"
-          conditions << Date.today - day_in_cycle # Positive: 6th-5.days = 1st / Negative: 25th--5.days = 30th
+        [[WelcomeCycle.config.welcome_cycle_start_date, @days_into_cycle], [WelcomeCycle.config.welcome_cycle_end_date, @days_offset_from_cycle_end]].each do |field_name, cycle_days|
+          next if cycle_days.nil?
+          cycle_days.each do |day_in_cycle|
+            conditions[0] << " OR " unless conditions[0].empty?
+            conditions[0] << "date(`#{WelcomeCycle.config.base_class.table_name}`.`#{field_name}`) = ?"
+            conditions << Date.today - day_in_cycle # Positive: 6th-5.days = 1st / Negative: 25th--5.days = 30th
+          end
         end
         conditions
       end
