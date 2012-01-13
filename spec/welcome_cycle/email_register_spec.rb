@@ -13,7 +13,6 @@ describe WelcomeCycle::EmailRegister do
     end
   end
 
-
   describe "adding emails into the register" do
     let(:email_register) { WelcomeCycle::EmailRegister.instance }
     it 'stores them in an array' do
