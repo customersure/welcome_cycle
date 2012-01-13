@@ -20,6 +20,9 @@ module WelcomeCycle
       WelcomeCycle::EmailRegister.instance << self
     end
 
+    # Change to:
+    # days_into_cycle 1, 5, 6           # must be > 0
+    # days_offset_from_cycle_end 5, 0, -5
     def days(*days)
       raise ArgumentError, "You cannot specify day zero in the welcome cycle" if days.detect { |d| d.zero? }
       raise ArgumentError, "You must specify at least one day in the welcome cycle that you'd like this email to be sent on" if days.empty?
