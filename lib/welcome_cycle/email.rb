@@ -35,14 +35,26 @@ module WelcomeCycle
     end
 
     def deliver(r)
-      if mail_message_obj = WelcomeCycleMailer.send(template_name, r)
-        mail_message_obj.deliver
+      if defined?(Delayed) && (defined?(Delayed::Job) || defined?(Delayed::Worker))
+        deliver_via_delayed_job(r)
       else
-        raise "Failed to create Mail::Message object from the current template name '#{template_name}'. Check it is specified in your WelcomeCycleMailer."
+        deliver_directly(r)
       end
     end
 
     private
+
+      def deliver_via_delayed_job(r)
+        WelcomeCycleMailer.delay.send(template_name, r)
+      end
+
+      def deliver_directly(r)
+        if mail_message_obj = WelcomeCycleMailer.send(template_name, r)
+          mail_message_obj.deliver
+        else
+          raise "Failed to create Mail::Message object from the current template name '#{template_name}'. Check it is specified in your WelcomeCycleMailer."
+        end
+      end
 
       def template_name
         @name.downcase.gsub(/\s/, '_')

@@ -149,6 +149,7 @@ describe WelcomeCycle::Email do
   describe "#deliver" do
     let(:mock_email) { mock 'email' }
     let(:mock_recipient) { mock 'recipient' }
+    let(:mock_dj) { mock 'delayed job' }
 
     context 'without DelayedJob in the project' do
       it 'calls deliver on the mailer template for this email passing in the recipient' do
@@ -157,9 +158,19 @@ describe WelcomeCycle::Email do
         subject.deliver(mock_recipient)
       end
     end
+
     context 'with DelayedJob in place' do
+      before do
+        module Delayed
+          class Job
+          end
+        end
+      end
+
       it 'queues the email for delivery' do
-        pending 'Need to research the specific DJ method chaining requirements'
+        WelcomeCycleMailer.should_receive(:delay).and_return(mock_dj)
+        mock_dj.should_receive(:test_email).with(mock_recipient).and_return(true)
+        subject.deliver(mock_recipient)
       end
     end
   end

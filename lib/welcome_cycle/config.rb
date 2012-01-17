@@ -5,7 +5,7 @@ module WelcomeCycle
 
     def initialize
       @welcome_cycle_start_date = :trial_stared_at
-      @welcome_cycle_end_date = :trial_ends_at
+      @welcome_cycle_end_date   = :trial_ends_at
     end
   end
 
