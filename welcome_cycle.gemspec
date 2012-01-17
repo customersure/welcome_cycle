@@ -6,7 +6,7 @@ Gem::Specification.new do |s|
   s.name        = "welcome_cycle"
   s.version     = WelcomeCycle::VERSION
   s.authors     = ["Luke Brown", "Chris Stainthorpe"]
-  s.email       = ["tsdbrown@gmail.com", "skipchris@randomcat.com"]
+  s.email       = ["tsdbrown@gmail.com", "chris@randomcat.co.uk"]
   s.homepage    = ""
   s.summary     = %q{Welcome cycle code for SAAS apps}
   s.description = %q{The idea behind this gem is to abstract out the logic of sending out welcome emails during a free trial.}
