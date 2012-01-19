@@ -55,7 +55,7 @@ module WelcomeCycle
           cycle_days.each do |day_in_cycle|
             conditions[0] << " OR " unless conditions[0].empty?
             conditions[0] << "date(`#{WelcomeCycle.config.base_class.table_name}`.`#{field_name}`) = ?"
-            conditions << Date.today - day_in_cycle # Positive: 6th-5.days = 1st / Negative: 25th--5.days = 30th
+            conditions << Time.now.utc.to_date - day_in_cycle # Positive: 6th-5.days = 1st / Negative: 25th--5.days = 30th
           end
         end
         conditions

@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe WelcomeCycle::Email do
 
+  let(:today) { Time.now.utc.to_date }
+
   class WelcomeCycleMailer
   end
 
@@ -23,7 +25,7 @@ describe WelcomeCycle::Email do
     WelcomeCycle::Email.new("Test email") do
       days_into_cycle 1, 10, 25
       scope do
-        where('created_at < ?', Date.today)
+        where('created_at < ?', today)
       end
     end
   end
@@ -98,7 +100,7 @@ describe WelcomeCycle::Email do
     context "with the email set to go out on day 5 and 10 of the welcome cycle" do
       let(:email) { WelcomeCycle::Email.new("Test email") { days_into_cycle(5, 10) } }
       it 'queries the base class for all the records that started the welcome cycle 5 or 10 days ago' do
-        Subscription.should_receive(:where).with(["date(`organisations`.`trial_started_at`) = ? OR date(`organisations`.`trial_started_at`) = ?", Date.today - 5, Date.today - 10]).and_return(mock_orgs)
+        Subscription.should_receive(:where).with(["date(`organisations`.`trial_started_at`) = ? OR date(`organisations`.`trial_started_at`) = ?", today - 5, today - 10]).and_return(mock_orgs)
         mock_orgs.should_receive(:all)
         email.recipients
       end
@@ -106,7 +108,7 @@ describe WelcomeCycle::Email do
     context "with the email set to go out 9 and 3 days before the welcome cycle ends" do
       let(:email) { WelcomeCycle::Email.new("Test email") { days_offset_from_cycle_end(-9, -3) } }
       it 'queries the base class for all the records that are 5/3 days away from ending the welcome cycle' do
-        Subscription.should_receive(:where).with(["date(`organisations`.`trial_ends_at`) = ? OR date(`organisations`.`trial_ends_at`) = ?", Date.today + 9, Date.today + 3]).and_return(mock_orgs)
+        Subscription.should_receive(:where).with(["date(`organisations`.`trial_ends_at`) = ? OR date(`organisations`.`trial_ends_at`) = ?", today + 9, today + 3]).and_return(mock_orgs)
         mock_orgs.should_receive(:all)
         email.recipients
       end
@@ -123,7 +125,7 @@ describe WelcomeCycle::Email do
       end
       it "adds the extra scope to the date based query on the base_class" do
         mock_active_orgs = mock 'mock active orgs'
-        Subscription.should_receive(:where).with(["date(`organisations`.`trial_started_at`) = ? OR date(`organisations`.`trial_ends_at`) = ?", Date.today - 3, Date.today + 5]).and_return(mock_orgs)
+        Subscription.should_receive(:where).with(["date(`organisations`.`trial_started_at`) = ? OR date(`organisations`.`trial_ends_at`) = ?", today - 3, today + 5]).and_return(mock_orgs)
         mock_orgs.should_receive(:active).and_return(mock_active_orgs)
         mock_active_orgs.should_receive(:where).with('1=1')
         email.recipients
@@ -137,7 +139,7 @@ describe WelcomeCycle::Email do
         end
         it "queries based on the configured field names" do
           mock_active_orgs = mock 'mock active orgs'
-          Subscription.should_receive(:where).with(["date(`organisations`.`my_test_start_date`) = ? OR date(`organisations`.`my_test_end_date`) = ?", Date.today - 3, Date.today + 5]).and_return(mock_orgs)
+          Subscription.should_receive(:where).with(["date(`organisations`.`my_test_start_date`) = ? OR date(`organisations`.`my_test_end_date`) = ?", today - 3, today + 5]).and_return(mock_orgs)
           mock_orgs.should_receive(:active).and_return(mock_active_orgs)
           mock_active_orgs.should_receive(:where).with('1=1')
           email.recipients
