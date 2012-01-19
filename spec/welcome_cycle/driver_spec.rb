@@ -3,8 +3,8 @@ require 'spec_helper'
 describe WelcomeCycle::Driver do
 
   describe "::run" do
-    let(:email1) { mock 'email 1' }
-    let(:email2) { mock 'email 1' }
+    let(:email1) { mock('email 1').as_null_object }
+    let(:email2) { mock('email 1').as_null_object }
 
     context "when WelcomeCycle has not been configured" do
       it 'raises an error telling you to configure it' do
@@ -33,6 +33,18 @@ describe WelcomeCycle::Driver do
       end
     end
 
-  end
+    describe 'callbacks' do
+      it 'calls the before_run callback if one is set' do
+        WelcomeCycle.configure { |c| c.before {} }
+        WelcomeCycle.config.before_run.should_receive(:call)
+        WelcomeCycle::Driver.run
+      end
 
+      it 'calls the after_run callback if one is set' do
+        WelcomeCycle.configure { |c| c.after {} }
+        WelcomeCycle.config.after_run.should_receive(:call)
+        WelcomeCycle::Driver.run
+      end
+    end
+  end
 end
