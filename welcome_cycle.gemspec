@@ -8,8 +8,9 @@ Gem::Specification.new do |s|
   s.authors     = ["Luke Brown", "Chris Stainthorpe"]
   s.email       = ["tsdbrown@gmail.com", "chris@randomcat.co.uk"]
   s.homepage    = ""
-  s.summary     = %q{Welcome cycle code for SAAS apps}
+  s.summary     = %q{Welcome cycle code for rails apps}
   s.description = %q{The idea behind this gem is to abstract out the logic of sending out welcome emails during a free trial.}
+  s.license     = %q{MIT}
 
   s.rubyforge_project = "welcome_cycle"
 

@@ -89,3 +89,9 @@ Set your favourite scheduler to run the WelcomeCycle::Driver.run daily. E.g. usi
 
 ## TODO
  * Work out a clean way of ignoring the initializer unless rails runner is being used.
+
+## License
+
+welcome_cycle is released under the MIT license:
+
+* www.opensource.org/licenses/MIT
