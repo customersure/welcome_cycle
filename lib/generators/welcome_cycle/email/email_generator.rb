@@ -10,9 +10,10 @@ module WelcomeCycle
 
 
 WelcomeCycle::Email.new("#{file_name.gsub(/_/, ' ').capitalize}") do
-  days 1, 10, -2 # on which days of the trial should the mail be sent?
+  days_into_cycle 5, 10             # Send on 5 and 10 days into trial
+  days_offset_from_cycle_end -5, 5  # Send 5 days before and 5 days after the cycle ends
   scope do
-    # send if these Arel conditions are met
+     # send if these Arel conditions are met
   end
 end
           EOS
